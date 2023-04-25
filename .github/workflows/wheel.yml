@@ -1,0 +1,86 @@
+name: Build TA-Lib wheels for Windows
+
+on:
+  workflow_dispatch:
+
+env:
+  TALIB_C_VER: 0.4.0
+  TALIB_PY_VER: 0.4.26
+  CIBW_BEFORE_BUILD: python -m pip install oldest-supported-numpy cython
+  CIBW_TEST_REQUIRES: pytest pandas polars
+  CIBW_TEST_COMMAND: >
+    cd .. &&
+    pytest --rootdir=C: -k "not RSI and not threading" --pyargs talib
+  CIBW_TEST_SKIP: "*win32"
+  CIBW_SKIP: "pp* cp36*"
+  MSBUILDTREATHIGHERTOOLSVERSIONASCURRENT: 1
+
+jobs:
+  build_amd64:
+    name: Build AMD64 wheels
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-2022]
+    env:
+      VS_PLATFORM: x64
+    steps:
+      - uses: actions/checkout@v3
+      - uses: microsoft/setup-msbuild@v1.1
+        with:
+          msbuild-architecture: x64
+      - run: build.cmd
+        shell: cmd
+      - uses: pypa/cibuildwheel@v2.12.3
+        env:
+          CIBW_ARCHS_WINDOWS: AMD64
+          CIBW_ENVIRONMENT_WINDOWS: LIB="ta-lib\\c\\ide\\vs2022\\lib_proj\\$VS_PLATFORM\\cdr;$LIB"
+      - uses: actions/upload-artifact@v3
+        with:
+          path: ./wheelhouse/*.whl
+  build_x86:
+    name: Build x86 wheels
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-2022]
+    env:
+      VS_PLATFORM: Win32
+    steps:
+      - uses: actions/checkout@v3
+      - uses: microsoft/setup-msbuild@v1.1
+        with:
+          msbuild-architecture: x86
+      - run: build.cmd
+        shell: cmd
+      - uses: pypa/cibuildwheel@v2.12.3
+        env:
+          CIBW_ARCHS_WINDOWS: x86
+          CIBW_ENVIRONMENT_WINDOWS: LIB="ta-lib\\c\\ide\\vs2022\\lib_proj\\$VS_PLATFORM\\cdr;$LIB"
+      - uses: actions/upload-artifact@v3
+        with:
+          path: ./wheelhouse/*.whl
+  # ARM64 wheel is broken
+  # build_arm64:
+  #  name: Build ARM64 wheels
+  #  runs-on: ${{ matrix.os }}
+  #  strategy:
+  #    matrix:
+  #      os: [windows-2022]
+  #  env:
+  #    VS_PLATFORM: ARM64
+  #  steps:
+  #    - uses: actions/checkout@v3
+  #    - uses: microsoft/setup-msbuild@v1.1
+  #      with:
+  #        msbuild-architecture: arm64
+  #    - run: build.cmd
+  #      shell: cmd
+  #    - uses: pypa/cibuildwheel@v2.12.3
+  #      env:
+  #        CIBW_SKIP: "pp* cp36* cp37* cp38* cp39* cp310*"
+  #        CIBW_ARCHS_WINDOWS: ARM64
+  #        CIBW_ENVIRONMENT_WINDOWS: LIB="ta-lib\\c\\ide\\vs2022\\lib_proj\\$VS_PLATFORM\\cdr;$LIB"
+  #    - uses: actions/upload-artifact@v3
+  #      with:
+  #        path: ./wheelhouse/*.whl
