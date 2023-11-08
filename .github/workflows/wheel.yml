@@ -15,7 +15,7 @@ env:
     cd .. &&
     pytest --rootdir=C: -k "not RSI and not threading" {project}\tests
   CIBW_TEST_SKIP: "*win32"
-  CIBW_SKIP: "pp* cp36* cp312*"
+  CIBW_SKIP: "pp* cp36*"
   MSBUILDTREATHIGHERTOOLSVERSIONASCURRENT: 1
 
 jobs:
@@ -28,13 +28,13 @@ jobs:
     env:
       VS_PLATFORM: x64
     steps:
-      - uses: actions/checkout@v3
-      - uses: microsoft/setup-msbuild@v1.1
+      - uses: actions/checkout@v4
+      - uses: microsoft/setup-msbuild@v1
         with:
           msbuild-architecture: x64
       - run: build.cmd
         shell: cmd
-      - uses: pypa/cibuildwheel@v2.15.0
+      - uses: pypa/cibuildwheel@v2.16.2
         env:
           CIBW_ARCHS_WINDOWS: AMD64
           CIBW_ENVIRONMENT_WINDOWS: LIB="ta-lib\\c\\ide\\vs2022\\lib_proj\\$VS_PLATFORM\\cdr;$LIB"
@@ -50,13 +50,13 @@ jobs:
     env:
       VS_PLATFORM: Win32
     steps:
-      - uses: actions/checkout@v3
-      - uses: microsoft/setup-msbuild@v1.1
+      - uses: actions/checkout@v4
+      - uses: microsoft/setup-msbuild@v1
         with:
           msbuild-architecture: x86
       - run: build.cmd
         shell: cmd
-      - uses: pypa/cibuildwheel@v2.15.0
+      - uses: pypa/cibuildwheel@v2.16.2
         env:
           CIBW_ARCHS_WINDOWS: x86
           CIBW_ENVIRONMENT_WINDOWS: LIB="ta-lib\\c\\ide\\vs2022\\lib_proj\\$VS_PLATFORM\\cdr;$LIB"
@@ -73,13 +73,13 @@ jobs:
   #  env:
   #    VS_PLATFORM: ARM64
   #  steps:
-  #    - uses: actions/checkout@v3
-  #    - uses: microsoft/setup-msbuild@v1.1
+  #    - uses: actions/checkout@v4
+  #    - uses: microsoft/setup-msbuild@v1
   #      with:
   #        msbuild-architecture: arm64
   #    - run: build.cmd
   #      shell: cmd
-  #    - uses: pypa/cibuildwheel@v2.12.3
+  #    - uses: pypa/cibuildwheel@v2.16.2
   #      env:
   #        CIBW_SKIP: "pp* cp36* cp37* cp38* cp39* cp310*"
   #        CIBW_ARCHS_WINDOWS: ARM64
