@@ -3,6 +3,6 @@ Build [TA-Lib](https://github.com/ta-lib/ta-lib-python) wheels for Python on Win
 
 The wheels can be downloaded from the [Releases](https://github.com/cgohlke/talib-build/releases) page.
 
-Install a wheel on the command line, for example for Python 3.11 64-bit:
+Install a wheel on the command line, for example for Python 3.12 64-bit:
 
-    $ py.exe -3.11 -m pip install TA_Lib-0.4.28-cp311-cp311-win_amd64.whl 
+    $ py.exe -3.12 -m pip install TA_Lib-0.4.29-cp312-cp312-win_amd64.whl 

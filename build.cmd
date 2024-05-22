@@ -1,6 +1,10 @@
 :: Download and build TA-Lib source code
 @echo on
 
+:: set TALIB_C_VER=0.4.0
+:: set TALIB_PY_VER=0.4.29
+:: set VS_PLATFORM=x64
+
 curl -L -o talib.zip https://sourceforge.net/projects/ta-lib/files/ta-lib/%TALIB_C_VER%/ta-lib-%TALIB_C_VER%-msvc.zip
 if errorlevel 1 exit /B 1
 
@@ -22,3 +26,7 @@ if errorlevel 1 exit /B 1
 
 msbuild ta-lib\c\ide\vs2022\lib_proj\ta_lib.sln /m /t:Clean;Rebuild /p:Configuration=cdr /p:Platform=%VS_PLATFORM%
 if errorlevel 1 exit /B 1
+
+copy /Y ta-lib\c\include\*.h ta-lib\
+
+:: del pyproject.toml

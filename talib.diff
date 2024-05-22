@@ -11,11 +11,11 @@ index a68d128..caefaf8 100644
      lib_talib_name = 'ta_libc_cdr'
 -    include_dirs = [r"c:\ta-lib\c\include"]
 -    library_dirs = [r"c:\ta-lib\c\lib"]
-+    include_dirs = [numpy.get_include(), r'ta-lib\c\include']
++    include_dirs = [numpy.get_include(), '.']
 +    library_dirs = []
  
  if 'TA_INCLUDE_PATH' in os.environ:
-     paths = os.environ['TA_INCLUDE_PATH'].split(os.pathsep)
+     include_dirs = os.environ['TA_INCLUDE_PATH'].split(os.pathsep)
 diff --git a/ta-lib/c/src/ta_func/ta_CCI.c b/ta-lib/c/src/ta_func/ta_CCI.c
 index 14fa40e..d583b48 100644
 --- a/ta-lib/c/src/ta_func/ta_CCI.c
