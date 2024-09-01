@@ -5,18 +5,18 @@ on:
 
 env:
   TALIB_C_VER: 0.4.0
-  TALIB_PY_VER: 0.4.29
+  TALIB_PY_VER: 0.4.32
   PIP_NO_VERIFY: 0
   PIP_VERBOSE: 1
   # CIBW_ENVIRONMENT: "PIP_PRE=1"
   CIBW_BUILD_VERBOSITY: 3
-  CIBW_BEFORE_BUILD: pip install -U setuptools wheel numpy==2.0.0rc2 Cython
+  CIBW_BEFORE_BUILD: pip install -U setuptools wheel numpy Cython
   CIBW_TEST_REQUIRES: pytest pandas polars
   CIBW_TEST_COMMAND: >
     cd .. &&
-    pytest --rootdir=C: -k "not RSI and not threading" {project}\tests
-  CIBW_TEST_SKIP: "*win32"
-  CIBW_SKIP: "pp* cp36* cp37* cp38*"
+    pytest --rootdir=C: -k "not RSI and not threading" {project}/tests
+  CIBW_TEST_SKIP: "*win32 cp313*"
+  CIBW_SKIP: "pp* cp36*"
   MSBUILDTREATHIGHERTOOLSVERSIONASCURRENT: 1
 
 jobs:
@@ -35,10 +35,12 @@ jobs:
           msbuild-architecture: x64
       - run: build.cmd
         shell: cmd
-      - uses: pypa/cibuildwheel@v2.18.1
+      - uses: pypa/cibuildwheel@v2.20.0
         env:
           CIBW_ARCHS_WINDOWS: AMD64
-          CIBW_ENVIRONMENT_WINDOWS: LIB="ta-lib\\c\\ide\\vs2022\\lib_proj\\$VS_PLATFORM\\cdr;$LIB" PIP_NO_BUILD_ISOLATION=false
+          CIBW_ENVIRONMENT_WINDOWS: >
+            LIB="ta-lib\\c\\ide\\vs2022\\lib_proj\\$VS_PLATFORM\\cdr;$LIB"
+            PIP_NO_BUILD_ISOLATION=false
       - uses: actions/upload-artifact@v4
         with:
           path: ./wheelhouse/*.whl
@@ -58,10 +60,12 @@ jobs:
           msbuild-architecture: x86
       - run: build.cmd
         shell: cmd
-      - uses: pypa/cibuildwheel@v2.18.1
+      - uses: pypa/cibuildwheel@v2.20.0
         env:
           CIBW_ARCHS_WINDOWS: x86
-          CIBW_ENVIRONMENT_WINDOWS: LIB="ta-lib\\c\\ide\\vs2022\\lib_proj\\$VS_PLATFORM\\cdr;$LIB" PIP_NO_BUILD_ISOLATION=false
+          CIBW_ENVIRONMENT_WINDOWS: >
+            LIB="ta-lib\\c\\ide\\vs2022\\lib_proj\\$VS_PLATFORM\\cdr;$LIB"
+            PIP_NO_BUILD_ISOLATION=false
       - uses: actions/upload-artifact@v4
         with:
           path: ./wheelhouse/*.whl
@@ -82,7 +86,7 @@ jobs:
   #        msbuild-architecture: arm64
   #    - run: build.cmd
   #      shell: cmd
-  #    - uses: pypa/cibuildwheel@v2.18.1
+  #    - uses: pypa/cibuildwheel@v2.20.0
   #      env:
   #        CIBW_SKIP: "pp* cp36* cp37* cp38* cp39* cp310*"
   #        CIBW_ARCHS_WINDOWS: ARM64

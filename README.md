@@ -5,4 +5,4 @@ The wheels can be downloaded from the [Releases](https://github.com/cgohlke/tali
 
 Install a wheel on the command line, for example for Python 3.12 64-bit:
 
-    $ py.exe -3.12 -m pip install TA_Lib-0.4.29-cp312-cp312-win_amd64.whl 
+    $ py.exe -3.12 -m pip install TA_Lib-0.4.32-cp312-cp312-win_amd64.whl 

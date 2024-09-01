@@ -2,7 +2,7 @@
 @echo on
 
 :: set TALIB_C_VER=0.4.0
-:: set TALIB_PY_VER=0.4.29
+:: set TALIB_PY_VER=0.4.32
 :: set VS_PLATFORM=x64
 
 curl -L -o talib.zip https://sourceforge.net/projects/ta-lib/files/ta-lib/%TALIB_C_VER%/ta-lib-%TALIB_C_VER%-msvc.zip
