@@ -1,32 +1,45 @@
-:: Download and build TA-Lib source code
+:: Download and build TA-Lib 
 @echo on
 
-:: set TALIB_C_VER=0.4.0
-:: set TALIB_PY_VER=0.5.1
-:: set VS_PLATFORM=x64
+:: set TALIB_C_VER=0.6.2
+:: set TALIB_PY_VER=0.5.2
 
-curl -L -o talib.zip https://sourceforge.net/projects/ta-lib/files/ta-lib/%TALIB_C_VER%/ta-lib-%TALIB_C_VER%-msvc.zip
+set CMAKE_GENERATOR=NMake Makefiles
+set CMAKE_BUILD_TYPE=Release
+set CMAKE_CONFIGURATION_TYPES=Release
+
+curl -L -o talib-c.zip https://github.com/TA-Lib/ta-lib/archive/refs/tags/v%TALIB_C_VER%.zip
 if errorlevel 1 exit /B 1
-
-tar -xf talib.zip
-if errorlevel 1 exit /B 1
-
-del talib\_ta_lib.c
 
 curl -L -o talib-python.zip https://github.com/TA-Lib/ta-lib-python/archive/refs/tags/TA_Lib-%TALIB_PY_VER%.zip
+if errorlevel 1 exit /B 1
+
+tar -xzvf talib-c.zip
 if errorlevel 1 exit /B 1
 
 tar -xf talib-python.zip --strip-components=1
 if errorlevel 1 exit /B 1
 
-git apply --verbose --binary talib.diff
-if errorlevel 1 exit /B 1
+:: git apply --verbose --binary talib.diff
+:: if errorlevel 1 exit /B 1
 
 :: set MSBUILDTREATHIGHERTOOLSVERSIONASCURRENT
 
-msbuild ta-lib\c\ide\vs2022\lib_proj\ta_lib.sln /m /t:Clean;Rebuild /p:Configuration=cdr /p:Platform=%VS_PLATFORM%
+setlocal
+cd ta-lib-%TALIB_C_VER%
+
+mkdir  include\ta-lib
+copy /Y include\*.* include\ta-lib
+
+md _build
+cd _build
+
+cmake.exe ..
 if errorlevel 1 exit /B 1
 
-copy /Y ta-lib\c\include\*.h ta-lib\
+nmake.exe /nologo all
+if errorlevel 1 exit /B 1
 
-:: del pyproject.toml
+copy /Y /B ta-lib-static.lib ta-lib.lib
+
+endlocal
