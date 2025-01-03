@@ -2,7 +2,7 @@
 @echo on
 
 :: set TALIB_C_VER=0.6.2
-:: set TALIB_PY_VER=0.5.2
+:: set TALIB_PY_VER=0.6.0
 
 set CMAKE_GENERATOR=NMake Makefiles
 set CMAKE_BUILD_TYPE=Release
