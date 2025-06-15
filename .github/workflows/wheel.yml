@@ -5,7 +5,7 @@ on:
 
 env:
   TALIB_C_VER: 0.6.4
-  TALIB_PY_VER: 0.6.3
+  TALIB_PY_VER: 0.6.4
   PIP_NO_VERIFY: 0
   PIP_VERBOSE: 1
   CIBW_BUILD_VERBOSITY: 2
@@ -14,8 +14,8 @@ env:
   CIBW_TEST_COMMAND: >
     cd .. &&
     pytest --rootdir=C: -k "not RSI and not threading" {project}/tests
-  CIBW_TEST_SKIP: "*win32 cp37* cp38* cp39*"
-  CIBW_SKIP: "pp* cp36*"
+  CIBW_TEST_SKIP: "*win32 *arm64 cp38* cp39* cp314*"
+  CIBW_SKIP: "pp*"
   MSBUILDTREATHIGHERTOOLSVERSIONASCURRENT: 1
 
 jobs:
@@ -32,7 +32,7 @@ jobs:
           arch: amd64
       - run: build.cmd
         shell: cmd
-      - uses: pypa/cibuildwheel@v2.22.0
+      - uses: pypa/cibuildwheel@v3.0.0
         env:
           CIBW_ARCHS_WINDOWS: AMD64
           CIBW_ENVIRONMENT_WINDOWS: >
@@ -56,7 +56,7 @@ jobs:
           arch: amd64_x86
       - run: build.cmd
         shell: cmd
-      - uses: pypa/cibuildwheel@v2.22.0
+      - uses: pypa/cibuildwheel@v3.0.0
         env:
           CIBW_ARCHS_WINDOWS: x86
           CIBW_ENVIRONMENT_WINDOWS: >
@@ -67,3 +67,28 @@ jobs:
         with:
           path: ./wheelhouse/*.whl
           name: wheels-win32
+  build_arm64:
+    name: Build ARM64 wheels
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-11-arm]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: arm64
+      - run: build.cmd
+        shell: cmd
+      - uses: pypa/cibuildwheel@v3.0.0
+        env:
+          CIBW_SKIP: "pp* cp39* cp310*"
+          CIBW_ARCHS_WINDOWS: ARM64
+          CIBW_ENVIRONMENT_WINDOWS: >
+            TA_LIBRARY_PATH="ta-lib-$TALIB_C_VER\\_build;$LIB"
+            TA_INCLUDE_PATH="ta-lib-$TALIB_C_VER\\include;$INCLUDE"
+            PIP_NO_BUILD_ISOLATION=false
+      - uses: actions/upload-artifact@v4
+        with:
+          path: ./wheelhouse/*.whl
+          name: wheels-win-arm64
