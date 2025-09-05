@@ -5,7 +5,7 @@ on:
 
 env:
   TALIB_C_VER: 0.6.4
-  TALIB_PY_VER: 0.6.5
+  TALIB_PY_VER: 0.6.7
   PIP_NO_VERIFY: 0
   PIP_VERBOSE: 1
   CIBW_BUILD_VERBOSITY: 2
@@ -22,15 +22,15 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [windows-2022]
+        os: [windows-latest]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: ilammy/msvc-dev-cmd@v1
         with:
           arch: amd64
       - run: build.cmd
         shell: cmd
-      - uses: pypa/cibuildwheel@v3.1.3
+      - uses: pypa/cibuildwheel@v3.1.4
         env:
           CIBW_ARCHS_WINDOWS: AMD64
           CIBW_ENVIRONMENT_WINDOWS: >
@@ -46,15 +46,15 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [windows-2022]
+        os: [windows-latest]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: ilammy/msvc-dev-cmd@v1
         with:
           arch: amd64_x86
       - run: build.cmd
         shell: cmd
-      - uses: pypa/cibuildwheel@v3.1.3
+      - uses: pypa/cibuildwheel@v3.1.4
         env:
           CIBW_ARCHS_WINDOWS: x86
           CIBW_ENVIRONMENT_WINDOWS: >
@@ -72,13 +72,13 @@ jobs:
       matrix:
         os: [windows-11-arm]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: ilammy/msvc-dev-cmd@v1
         with:
           arch: arm64
       - run: build.cmd
         shell: cmd
-      - uses: pypa/cibuildwheel@v3.1.3
+      - uses: pypa/cibuildwheel@v3.1.4
         env:
           CIBW_SKIP: "cp39* cp310*"
           CIBW_ARCHS_WINDOWS: ARM64
