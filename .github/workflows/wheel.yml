@@ -5,7 +5,7 @@ on:
 
 env:
   TALIB_C_VER: 0.6.4
-  TALIB_PY_VER: 0.6.7
+  TALIB_PY_VER: 0.6.8
   PIP_NO_VERIFY: 0
   PIP_VERBOSE: 1
   CIBW_BUILD_VERBOSITY: 2
@@ -13,7 +13,7 @@ env:
   CIBW_TEST_COMMAND: >
     cd .. &&
     pytest --rootdir=C: -k "not RSI and not threading" {project}/tests
-  CIBW_TEST_SKIP: "*win32 *arm64 cp38* cp39* cp314*"
+  CIBW_TEST_SKIP: "*win32 *arm64 cp38* cp39* cp314t*"
   MSBUILDTREATHIGHERTOOLSVERSIONASCURRENT: 1
 
 jobs:
@@ -30,7 +30,7 @@ jobs:
           arch: amd64
       - run: build.cmd
         shell: cmd
-      - uses: pypa/cibuildwheel@v3.1.4
+      - uses: pypa/cibuildwheel@v3.2.1
         env:
           CIBW_ARCHS_WINDOWS: AMD64
           CIBW_ENVIRONMENT_WINDOWS: >
@@ -54,7 +54,7 @@ jobs:
           arch: amd64_x86
       - run: build.cmd
         shell: cmd
-      - uses: pypa/cibuildwheel@v3.1.4
+      - uses: pypa/cibuildwheel@v3.2.1
         env:
           CIBW_ARCHS_WINDOWS: x86
           CIBW_ENVIRONMENT_WINDOWS: >
@@ -78,7 +78,7 @@ jobs:
           arch: arm64
       - run: build.cmd
         shell: cmd
-      - uses: pypa/cibuildwheel@v3.1.4
+      - uses: pypa/cibuildwheel@v3.2.1
         env:
           CIBW_SKIP: "cp39* cp310*"
           CIBW_ARCHS_WINDOWS: ARM64
